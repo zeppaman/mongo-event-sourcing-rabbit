@@ -1,22 +1,34 @@
 
-const Broker = require('rascal').BrokerAsPromised;
 
-const broker = null;
+var amqp = require('amqplib/callback_api');
 
-broker.on('error', console.error);
 const plugin = async function (input,config,context)
 {
-    if(broker==null)
-    {
-        let config=config.settings;
-        broker=await Broker.create(config);
-    }
+    let prefix=config.prefix || 'q';
+    let queue=`${prefix}${input.ns.db}-${input.ns.coll}`
+    console.log(queue);
     
-    let prefix=config.prefix || '';
-    let key=+`${prefix}${item.ns.db}-${item.ns.col}`
-
-    // Publish a message
-    const publication = await broker.publish(key, input);
-    publication.on('error', console.error);
+  
+        amqp.connect(config.settings.connection, function(error0, connection) {
+            if (error0) {
+                console.error(error0);
+                return;
+              }
+              connection.createChannel(function(error1, channel) {
+                if (error1) {
+                    console.error(error1);
+                    return;
+                  }
+                
+                  channel.assertQueue(queue, {
+                    durable: true
+                  });
+                  console.log(queue);
+                  channel.sendToQueue(queue, Buffer.from(JSON.stringify(input)));
+              });
+        });
+    
     
 };
+
+module.exports=plugin;

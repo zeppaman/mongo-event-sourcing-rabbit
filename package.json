@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/zeppaman/mongo-event-sourcing-rabbit#readme",
   "dependencies": {
+    "amqplib": "^0.8.0",
     "rascal": "^13.1.0"
   }
 }
