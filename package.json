@@ -1,6 +1,6 @@
 {
   "name": "mongo-event-sourcing-rabbit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "RabbitMQ plugin for MESS",
   "main": "index.js",
   "scripts": {
